@@ -20,6 +20,7 @@ class TwitterUser(models.Model):
     def __str__(self):
         return f'{self.name} (id: {self.pk})'
 
+    @property
     def following(self):
         following_relations = self.relations_by_from_user.filter(
             type=Relation.RELATION_TYPE_FOLLOWING,
@@ -27,6 +28,46 @@ class TwitterUser(models.Model):
         following_pk_list = following_relations.values_list('to_user', flat=True)
         following_users = TwitterUser.objects.filter(pk__in=following_pk_list)
         return following_users
+
+    @property
+    def followers(self):
+        pk_list = self.relations_by_to_user.filter(
+            type=Relation.RELATION_TYPE_FOLLOWING
+        ).values_list('from_user', flat=True)
+        return TwitterUser.objects.filter(pk__in=pk_list)
+
+    @property
+    def block_users(self):
+        pk_list = self.relations_by_from_user.filter(
+            type=Relation.RELATION_TYPE_BLOCK.values_list('to_user', flat=True)
+        )
+        return TwitterUser.objects.filter(pk__in=pk_list)
+
+    def is_followee(self, to_user):
+        return self.following.filter(pk=to_user.pk).exists()
+
+    def is_follower(self, to_user):
+        pass
+
+    def follow(self, to_user):
+        self.relations_by_from_user.filter(to_user=to_user).delete()
+        Relation.objects.create(
+            from_user=self,
+            to_user=to_user,
+            type=Relation.RELATION_TYPE_FOLLOWING,
+        )
+        # 다른 방법
+        # self.relations_by_from_user.create(
+        #     to_user=to_user,
+        #     type=Relation.RELATION_TYPE_FOLLOWING,
+        # )
+
+    def block(self, to_user):
+        self.relations_by_from_user.filter(to_user=to_user).delete()
+        self.relations_by_from_user.create(
+            to_user=to_user,
+            type=Relation.RELATION_TYPE_BLOCK,
+        )
 
 
 class Relation(models.Model):
@@ -49,3 +90,9 @@ class Relation(models.Model):
         related_name='relations_by_to_user',
     )
     type = models.CharField(max_length=1, choices=CHOICES_TYPE)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (
+            ('from_user', 'to_user'),
+        )
