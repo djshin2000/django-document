@@ -4,7 +4,8 @@ from .models import (
     Pizza, Topping,
     Post, User, PostLike,
     FacebookUser,
-    InstagramUser
+    InstagramUser,
+    TwitterUser,
 )
 
 admin.site.register(Pizza)
@@ -14,3 +15,5 @@ admin.site.register(User)
 admin.site.register(PostLike)
 admin.site.register(FacebookUser)
 admin.site.register(InstagramUser)
+admin.site.register(TwitterUser)
+
