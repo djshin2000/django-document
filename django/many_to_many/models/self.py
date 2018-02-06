@@ -9,6 +9,9 @@ class FacebookUser(models.Model):
     name = models.CharField(max_length=50)
     friends = models.ManyToManyField('self')
 
+    class Meta:
+        verbose_name_plural = 'Self - Facebook users'
+
     def __str__(self):
         # 출력 결과 >> 이한영 (친구: 박보영, 아이유)
 

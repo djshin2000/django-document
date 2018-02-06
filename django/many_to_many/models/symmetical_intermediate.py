@@ -17,6 +17,9 @@ class TwitterUser(models.Model):
         related_name='+',
     )
 
+    class Meta:
+        verbose_name_plural = 'Sym Intermediate - Twitter users'
+
     def __str__(self):
         return f'{self.name} (id: {self.pk})'
 
@@ -96,3 +99,4 @@ class Relation(models.Model):
         unique_together = (
             ('from_user', 'to_user'),
         )
+        verbose_name_plural = 'Sym Intermediate - Relations'
