@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp.apps.MyappConfig',
-    'foreignkey.apps.ForeignkeyConfig',
-    'many_to_many.apps.ManyToManyConfig',
-    'one_to_one.apps.OneToOneConfig',
+    'relations.foreignkey.apps.ForeignkeyConfig',
+    'relations.many_to_many.apps.ManyToManyConfig',
+    'relations.one_to_one.apps.OneToOneConfig',
     'inheritance.abstract_base_classes',
 ]
 
